@@ -7,7 +7,7 @@ export const useSocket = ()=>{
 }
 
  const SocketProvider = ({children})=>{
-  const socket =io('http://localhost:4000')
+  const socket =io('https://new-socket-server-render.onrender.com')
   return <SocketContext.Provider value={socket}>
      {children}
   </SocketContext.Provider>

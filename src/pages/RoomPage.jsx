@@ -7,6 +7,23 @@ const RoomPage = () => {
   const peerConnections = useRef({})
   const socket = useSocket()
   const localvid = useRef()
+  const configuration = {
+    iceServers: [
+      // STUN server
+      {
+        urls: "stun:stun.l.google.com:19302", // Replace with your STUN server address
+      },
+      {
+        urls: "stun:global.stun.twilio.com:3478", // Replace with your STUN server address
+      },
+      // TURN server with credentials
+      {
+        urls: "turn:relay1.expressturn.com:3478", // Your TURN server
+        username: "efNFMA7S3AXKL4C9FV", // Your username
+        credential: "qHpAu3uMlVCiUAlR", // Your password
+      },
+    ],
+  };
   const stm = async()=>{
     const stream = await navigator.mediaDevices.getUserMedia({video:true, audio:true})
     localStream.current = stream
@@ -36,7 +53,7 @@ const RoomPage = () => {
      peerConnections.current[data] = peer;
   }
   const createPeerConnection =async (to) => {
-    const peer = new RTCPeerConnection()
+    const peer = new RTCPeerConnection(configuration)
     const sss =await stm()
     sss?.getTracks().forEach((track)=>{
       peer.addTrack(track,sss)
@@ -115,11 +132,11 @@ const addRemoteVideo =(stm)=>{
   console.log(peerConnections.current)
  }
   return (
-    <div>
+    <div className="bg-gray-100 w-screen h-screen relative">
       <div onClick={dog} className="gs">click</div>
-      <video ref={localvid} autoPlay muted playsInline id="localVideo"/>
+      <video className="rounded-lg w-3/12 absolute right-4 bottom-4" ref={localvid} autoPlay muted playsInline id="localVideo"/>
 
-      <div id="remoteVideos"></div>
+      <div id="remoteVideos flex justify-center items-center"></div>
     </div>
   );
 };

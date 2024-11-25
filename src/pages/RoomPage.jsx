@@ -5,6 +5,7 @@ const RoomPage = () => {
   const param = useParams();
   const localStream = useRef(null);
   const peerConnections = useRef({})
+  const [remoteStreams,setRemoteStreams] = useState([])
   const socket = useSocket()
   const localvid = useRef()
   const configuration = {
@@ -63,6 +64,7 @@ const RoomPage = () => {
       if (!hasHandledTrack) {
         console.log(event);
         addRemoteVideo(event.streams[0])
+        setRemoteStreams(prev=>[...prev,event.streams[0]])
         hasHandledTrack = true;
       }
     }
@@ -125,18 +127,16 @@ const addRemoteVideo =(stm)=>{
   const video = document.createElement('video');
   video.srcObject = stm;
   video.autoplay = true
-  console.log(stm)//
   container.appendChild(video)
 }
- const dog = () => {
-  console.log(peerConnections.current)
- }
+
+console.log(remoteStreams)
   return (
-    <div className="bg-gray-100 w-screen h-screen relative">
-      <div onClick={dog} className="gs">click</div>
+    <div className="bg-gray-100 w-screen h-screen overflow-hidden relative">
       <video className="rounded-lg w-3/12 absolute right-4 bottom-4" ref={localvid} autoPlay muted playsInline id="localVideo"/>
 
-      <div id="remoteVideos flex justify-center items-center"></div>
+      <div id="remoteVideos" className="">
+      </div>
     </div>
   );
 };
